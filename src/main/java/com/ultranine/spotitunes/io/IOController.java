@@ -3,7 +3,16 @@ package com.ultranine.spotitunes.io;
 import com.ultranine.spotitunes.entities.Test;
 import com.ultranine.spotitunes.service.DatabaseAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/")
@@ -19,6 +28,28 @@ public class IOController {
             return accessor.findById(id).orElse(null);
         } catch (NumberFormatException e) {
             return null;
+        }
+    }
+
+    @GetMapping("audio/{songHandle}")
+    public ResponseEntity<InputStreamResource> getSongAudio(@PathVariable String songHandle) {
+        // TODO: Make this use the resource root
+        File audioFile = new File("src/main/resources/audio/" + songHandle + ".wav");
+
+        try {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(audioFile));
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + audioFile.getName());
+            headers.add(HttpHeaders.CONTENT_TYPE, "audio/wav");
+            headers.setContentLength(Files.size(audioFile.toPath()));
+            return ResponseEntity.ok().headers(headers).body(resource);
+        }
+        catch (FileNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        catch (IOException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }
