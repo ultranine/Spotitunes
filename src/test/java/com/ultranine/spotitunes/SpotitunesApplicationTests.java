@@ -1,4 +1,4 @@
-package com.example.spotitunes;
+package com.ultranine.spotitunes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
