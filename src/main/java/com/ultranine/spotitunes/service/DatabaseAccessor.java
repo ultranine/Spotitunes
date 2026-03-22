@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,15 @@ public class DatabaseAccessor {
 
     public List<Song> getAllSongs() {
         return songRepository.findAll();
+    }
+
+    public List<AccountData> getAllUsers() {
+        List<Account> servData = accountRepository.findAll();
+        List<AccountData> usersData = new ArrayList<>(servData.size());
+        for (Account account : servData) {
+            usersData.add(new AccountData(account.userName, account.id));
+        }
+        return usersData;
     }
 
     public AccountData registerAccount(TransientAccount account) {

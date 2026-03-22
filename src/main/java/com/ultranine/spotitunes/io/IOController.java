@@ -69,4 +69,9 @@ public class IOController {
     public List<Song> getSongList() {
         return accessor.getAllSongs();
     }
+
+    @GetMapping("getUserList")
+    public List<AccountData> getUserList() {
+        return accessor.getAllUsers();
+    }
 }
