@@ -1,6 +1,6 @@
 package com.ultranine.spotitunes.io;
 
-import com.ultranine.spotitunes.entities.Test;
+import com.ultranine.spotitunes.entities.Song;
 import com.ultranine.spotitunes.service.DatabaseAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -22,7 +23,7 @@ public class IOController {
     private DatabaseAccessor accessor;
 
     @GetMapping("/test/{testID}")
-    public Test dbTest(@PathVariable String testID) {
+    public Song dbTest(@PathVariable String testID) {
         try {
             long id = Long.parseLong(testID);
             return accessor.findById(id).orElse(null);
@@ -51,5 +52,10 @@ public class IOController {
         catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("getSongList")
+    public List<Song> getSongList() {
+        return accessor.getAllSongs();
     }
 }
