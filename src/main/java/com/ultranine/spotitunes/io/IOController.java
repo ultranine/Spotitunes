@@ -1,5 +1,6 @@
 package com.ultranine.spotitunes.io;
 
+import com.ultranine.spotitunes.entities.Account;
 import com.ultranine.spotitunes.entities.Song;
 import com.ultranine.spotitunes.service.DatabaseAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,16 @@ import java.util.List;
 public class IOController {
     @Autowired
     private DatabaseAccessor accessor;
+
+    @PostMapping("/addAccount")
+    public AccountData addAccount(@RequestBody TransientAccount account) {
+        return accessor.registerAccount(account);
+    }
+
+    @PostMapping("/attemptLogin")
+    public AccountData attemptLogin(@RequestBody TransientAccount account) {
+        return accessor.attemptLogin(account);
+    }
 
     @GetMapping("/test/{testID}")
     public Song dbTest(@PathVariable String testID) {
